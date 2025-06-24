@@ -27,9 +27,11 @@ export class StatisticsComponent implements OnInit {
   loading = true;
   error: string | null = null;
 
-  productColumns = ['productName', 'categoryName', 'brandName', 'quantitySold', 'totalRevenue'];
+  topProductColumns = ['rank', 'productName', 'categoryName', 'quantitySold', 'totalRevenue', 'availableStock'];
   categoryColumns = ['categoryName', 'productCount', 'quantitySold', 'totalRevenue'];
-  monthlyColumns = ['period', 'totalSales', 'totalRevenue'];
+  brandColumns = ['brandName', 'productCount', 'quantitySold', 'totalRevenue', 'percentage'];
+  monthlyColumns = ['period', 'orderCount', 'totalSales', 'totalRevenue', 'averageOrderValue'];
+  lowStockColumns = ['status', 'productName', 'categoryName', 'availableQuantity'];
 
   constructor(private statisticsService: StatisticsService) {}
 

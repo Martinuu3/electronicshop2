@@ -13,50 +13,54 @@
     <div *ngIf="statistics && !loading" class="space-y-6">
       <!-- Overview Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <mat-card class="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+        <mat-card class="bg-gradient-to-r from-blue-500 to-blue-600 text-white transform hover:scale-105 transition-transform duration-200">
           <mat-card-content class="p-6">
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-blue-100 text-sm font-medium">Total Produse Vândute</p>
                 <p class="text-3xl font-bold">{{ statistics.totalSales }}</p>
+                <p class="text-blue-200 text-xs mt-1">din {{ statistics.totalOrders }} comenzi</p>
               </div>
               <mat-icon class="text-4xl text-blue-200">shopping_cart</mat-icon>
             </div>
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="bg-gradient-to-r from-green-500 to-green-600 text-white">
+        <mat-card class="bg-gradient-to-r from-green-500 to-green-600 text-white transform hover:scale-105 transition-transform duration-200">
           <mat-card-content class="p-6">
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-green-100 text-sm font-medium">Venituri Totale</p>
                 <p class="text-3xl font-bold">{{ formatCurrency(statistics.totalRevenue) }}</p>
+                <p class="text-green-200 text-xs mt-1">Medie: {{ formatCurrency(statistics.averageOrderValue) }}/comandă</p>
               </div>
               <mat-icon class="text-4xl text-green-200">attach_money</mat-icon>
             </div>
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+        <mat-card class="bg-gradient-to-r from-purple-500 to-purple-600 text-white transform hover:scale-105 transition-transform duration-200">
           <mat-card-content class="p-6">
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-purple-100 text-sm font-medium">Produse Diferite</p>
                 <p class="text-3xl font-bold">{{ statistics.productsSold.length }}</p>
+                <p class="text-purple-200 text-xs mt-1">{{ statistics.categorySales.length }} categorii</p>
               </div>
               <mat-icon class="text-4xl text-purple-200">inventory</mat-icon>
             </div>
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+        <mat-card class="bg-gradient-to-r from-orange-500 to-orange-600 text-white transform hover:scale-105 transition-transform duration-200">
           <mat-card-content class="p-6">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-orange-100 text-sm font-medium">Categorii Active</p>
-                <p class="text-3xl font-bold">{{ statistics.categorySales.length }}</p>
+                <p class="text-orange-100 text-sm font-medium">Stoc Redus</p>
+                <p class="text-3xl font-bold">{{ statistics.lowStockProducts.length }}</p>
+                <p class="text-orange-200 text-xs mt-1">produse sub 10 bucăți</p>
               </div>
-              <mat-icon class="text-4xl text-orange-200">category</mat-icon>
+              <mat-icon class="text-4xl text-orange-200">warning</mat-icon>
             </div>
           </mat-card-content>
         </mat-card>
@@ -69,15 +73,35 @@
         </mat-card-header>
         <mat-card-content>
           <mat-tab-group class="mt-4">
-            <!-- Products Tab -->
-            <mat-tab label="Produse Vândute">
+            <!-- Top Products Tab -->
+            <mat-tab label="Top Produse">
               <div class="mt-4">
-                <h3 class="text-lg font-semibold mb-4">Top Produse după Cantitate Vândută</h3>
+                <h3 class="text-lg font-semibold mb-4">Top 10 Produse Vândute</h3>
                 <div class="overflow-x-auto">
-                  <table mat-table [dataSource]="statistics.productsSold" class="w-full">
+                  <table mat-table [dataSource]="statistics.topSellingProducts" class="w-full">
+                    <ng-container matColumnDef="rank">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">#</th>
+                      <td mat-cell *matCellDef="let product; let i = index">
+                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full text-white font-bold text-sm"
+                              [ngClass]="{
+                                'bg-yellow-500': i === 0,
+                                'bg-gray-400': i === 1,
+                                'bg-orange-600': i === 2,
+                                'bg-blue-500': i > 2
+                              }">
+                          {{ i + 1 }}
+                        </span>
+                      </td>
+                    </ng-container>
+
                     <ng-container matColumnDef="productName">
                       <th mat-header-cell *matHeaderCellDef class="font-semibold">Nume Produs</th>
-                      <td mat-cell *matCellDef="let product">{{ product.productName }}</td>
+                      <td mat-cell *matCellDef="let product">
+                        <div>
+                          <div class="font-medium">{{ product.productName }}</div>
+                          <div class="text-sm text-gray-500">{{ product.brandName }}</div>
+                        </div>
+                      </td>
                     </ng-container>
 
                     <ng-container matColumnDef="categoryName">
@@ -89,27 +113,35 @@
                       </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="brandName">
-                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Brand</th>
-                      <td mat-cell *matCellDef="let product">{{ product.brandName }}</td>
-                    </ng-container>
-
                     <ng-container matColumnDef="quantitySold">
-                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Cantitate Vândută</th>
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Cantitate</th>
                       <td mat-cell *matCellDef="let product">
                         <span class="font-semibold text-green-600">{{ product.quantitySold }}</span>
                       </td>
                     </ng-container>
 
                     <ng-container matColumnDef="totalRevenue">
-                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Venituri Totale</th>
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Venituri</th>
                       <td mat-cell *matCellDef="let product">
                         <span class="font-semibold text-blue-600">{{ formatCurrency(product.totalRevenue) }}</span>
                       </td>
                     </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="productColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: productColumns;" class="hover:bg-gray-50"></tr>
+                    <ng-container matColumnDef="availableStock">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Stoc</th>
+                      <td mat-cell *matCellDef="let product">
+                        <span [ngClass]="{
+                          'text-red-600 font-semibold': product.availableStock < 5,
+                          'text-orange-600 font-semibold': product.availableStock >= 5 && product.availableStock < 10,
+                          'text-green-600': product.availableStock >= 10
+                        }">
+                          {{ product.availableStock }}
+                        </span>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="topProductColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: topProductColumns;" class="hover:bg-gray-50"></tr>
                   </table>
                 </div>
               </div>
@@ -119,38 +151,108 @@
             <mat-tab label="Vânzări pe Categorii">
               <div class="mt-4">
                 <h3 class="text-lg font-semibold mb-4">Performanța Categoriilor</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                  <div class="space-y-4">
+                    <h4 class="font-medium text-gray-700">Distribuția Vânzărilor pe Categorii</h4>
+                    <div *ngFor="let category of statistics.categorySales" class="flex items-center space-x-3">
+                      <div class="flex-1">
+                        <div class="flex justify-between items-center mb-1">
+                          <span class="text-sm font-medium">{{ category.categoryName }}</span>
+                          <span class="text-sm text-gray-500">{{ category.percentage | number:'1.1-1' }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                          <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                               [style.width.%]="category.percentage"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="overflow-x-auto">
+                    <table mat-table [dataSource]="statistics.categorySales" class="w-full">
+                      <ng-container matColumnDef="categoryName">
+                        <th mat-header-cell *matHeaderCellDef class="font-semibold">Categorie</th>
+                        <td mat-cell *matCellDef="let category">
+                          <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full font-medium">
+                            {{ category.categoryName }}
+                          </span>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="productCount">
+                        <th mat-header-cell *matHeaderCellDef class="font-semibold">Produse</th>
+                        <td mat-cell *matCellDef="let category">{{ category.productCount }}</td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="quantitySold">
+                        <th mat-header-cell *matHeaderCellDef class="font-semibold">Cantitate</th>
+                        <td mat-cell *matCellDef="let category">
+                          <span class="font-semibold text-green-600">{{ category.quantitySold }}</span>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="totalRevenue">
+                        <th mat-header-cell *matHeaderCellDef class="font-semibold">Venituri</th>
+                        <td mat-cell *matCellDef="let category">
+                          <span class="font-semibold text-blue-600">{{ formatCurrency(category.totalRevenue) }}</span>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="categoryColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: categoryColumns;" class="hover:bg-gray-50"></tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+
+            <!-- Brands Tab -->
+            <mat-tab label="Vânzări pe Brand-uri">
+              <div class="mt-4">
+                <h3 class="text-lg font-semibold mb-4">Performanța Brand-urilor</h3>
                 <div class="overflow-x-auto">
-                  <table mat-table [dataSource]="statistics.categorySales" class="w-full">
-                    <ng-container matColumnDef="categoryName">
-                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Categorie</th>
-                      <td mat-cell *matCellDef="let category">
-                        <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full font-medium">
-                          {{ category.categoryName }}
+                  <table mat-table [dataSource]="statistics.brandSales" class="w-full">
+                    <ng-container matColumnDef="brandName">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Brand</th>
+                      <td mat-cell *matCellDef="let brand">
+                        <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full font-medium">
+                          {{ brand.brandName }}
                         </span>
                       </td>
                     </ng-container>
 
                     <ng-container matColumnDef="productCount">
-                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Nr. Produse</th>
-                      <td mat-cell *matCellDef="let category">{{ category.productCount }}</td>
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Produse</th>
+                      <td mat-cell *matCellDef="let brand">{{ brand.productCount }}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="quantitySold">
                       <th mat-header-cell *matHeaderCellDef class="font-semibold">Cantitate Vândută</th>
-                      <td mat-cell *matCellDef="let category">
-                        <span class="font-semibold text-green-600">{{ category.quantitySold }}</span>
+                      <td mat-cell *matCellDef="let brand">
+                        <span class="font-semibold text-green-600">{{ brand.quantitySold }}</span>
                       </td>
                     </ng-container>
 
                     <ng-container matColumnDef="totalRevenue">
                       <th mat-header-cell *matHeaderCellDef class="font-semibold">Venituri Totale</th>
-                      <td mat-cell *matCellDef="let category">
-                        <span class="font-semibold text-blue-600">{{ formatCurrency(category.totalRevenue) }}</span>
+                      <td mat-cell *matCellDef="let brand">
+                        <span class="font-semibold text-blue-600">{{ formatCurrency(brand.totalRevenue) }}</span>
                       </td>
                     </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="categoryColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: categoryColumns;" class="hover:bg-gray-50"></tr>
+                    <ng-container matColumnDef="percentage">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Procent</th>
+                      <td mat-cell *matCellDef="let brand">
+                        <div class="flex items-center space-x-2">
+                          <div class="w-16 bg-gray-200 rounded-full h-2">
+                            <div class="bg-indigo-600 h-2 rounded-full" [style.width.%]="brand.percentage"></div>
+                          </div>
+                          <span class="text-sm font-medium">{{ brand.percentage | number:'1.1-1' }}%</span>
+                        </div>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="brandColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: brandColumns;" class="hover:bg-gray-50"></tr>
                   </table>
                 </div>
               </div>
@@ -171,6 +273,13 @@
                       </td>
                     </ng-container>
 
+                    <ng-container matColumnDef="orderCount">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Comenzi</th>
+                      <td mat-cell *matCellDef="let monthly">
+                        <span class="font-semibold text-purple-600">{{ monthly.orderCount }}</span>
+                      </td>
+                    </ng-container>
+
                     <ng-container matColumnDef="totalSales">
                       <th mat-header-cell *matHeaderCellDef class="font-semibold">Produse Vândute</th>
                       <td mat-cell *matCellDef="let monthly">
@@ -185,8 +294,75 @@
                       </td>
                     </ng-container>
 
+                    <ng-container matColumnDef="averageOrderValue">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Valoare Medie</th>
+                      <td mat-cell *matCellDef="let monthly">
+                        <span class="font-medium text-gray-700">{{ formatCurrency(monthly.averageOrderValue) }}</span>
+                      </td>
+                    </ng-container>
+
                     <tr mat-header-row *matHeaderRowDef="monthlyColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: monthlyColumns;" class="hover:bg-gray-50"></tr>
+                  </table>
+                </div>
+              </div>
+            </mat-tab>
+
+            <!-- Low Stock Tab -->
+            <mat-tab label="Stoc Redus">
+              <div class="mt-4">
+                <h3 class="text-lg font-semibold mb-4">Produse cu Stoc Redus</h3>
+                <div *ngIf="statistics.lowStockProducts.length === 0" class="text-center py-8">
+                  <mat-icon class="text-6xl text-green-400 mb-4">check_circle</mat-icon>
+                  <p class="text-lg text-gray-600">Toate produsele au stoc suficient!</p>
+                </div>
+                <div *ngIf="statistics.lowStockProducts.length > 0" class="overflow-x-auto">
+                  <table mat-table [dataSource]="statistics.lowStockProducts" class="w-full">
+                    <ng-container matColumnDef="status">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Status</th>
+                      <td mat-cell *matCellDef="let product">
+                        <mat-icon [ngClass]="{
+                          'text-red-500': product.isLowStock,
+                          'text-orange-500': !product.isLowStock
+                        }">
+                          {{ product.isLowStock ? 'error' : 'warning' }}
+                        </mat-icon>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="productName">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Nume Produs</th>
+                      <td mat-cell *matCellDef="let product">
+                        <div>
+                          <div class="font-medium">{{ product.productName }}</div>
+                          <div class="text-sm text-gray-500">{{ product.brandName }}</div>
+                        </div>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="categoryName">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Categorie</th>
+                      <td mat-cell *matCellDef="let product">
+                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                          {{ product.categoryName }}
+                        </span>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="availableQuantity">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Stoc Disponibil</th>
+                      <td mat-cell *matCellDef="let product">
+                        <span [ngClass]="{
+                          'text-red-600 font-bold': product.isLowStock,
+                          'text-orange-600 font-semibold': !product.isLowStock
+                        }">
+                          {{ product.availableQuantity }}
+                        </span>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="lowStockColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: lowStockColumns;" class="hover:bg-gray-50"></tr>
                   </table>
                 </div>
               </div>
