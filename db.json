@@ -1,0 +1,134 @@
+{
+  "brands": [
+    {
+      "id": "1",
+      "name": "LG"
+    },
+    {
+      "id": "2",
+      "name": "Samsung"
+    },
+    {
+      "id": "a520",
+      "name": "APPLE"
+    },
+    {
+      "id": "4e78",
+      "name": "Ariston"
+    },
+    {
+      "id": "8a29",
+      "name": "Acer"
+    },
+    {
+      "id": "1eba",
+      "name": "lenovo"
+    },
+    {
+      "id": "3e65",
+      "name": "ASUS"
+    },
+    {
+      "id": "71e3",
+      "name": "DELL"
+    },
+    {
+      "id": "cb66",
+      "name": "Lenovo"
+    }
+  ],
+  "products": [
+    {
+      "name": "LG TV 32inch",
+      "details": "detail of LG TV 32inch",
+      "brandId": "2",
+      "purchasePrice": 1000,
+      "salePrice": "12000",
+      "availableQuantity": 323,
+      "id": "1"
+    },
+    {
+      "id": "2",
+      "name": "LG TV 42inch",
+      "details": "detail",
+      "brandId": "1",
+      "purchasePrice": "20000",
+      "salePrice": "22000",
+      "availableQuantity": 50
+    },
+    {
+      "id": "ed4a",
+      "name": "LG 32inch  ultra hd tv",
+      "details": "",
+      "brandId": "1",
+      "purchasePrice": 10000,
+      "salePrice": 12000,
+      "availableQuantity": 47
+    },
+    {
+      "name": "Samsun Mobile 4G",
+      "details": "detail of Samsun Mobile 4G",
+      "brandId": "2",
+      "purchasePrice": 8000,
+      "salePrice": 9000,
+      "availableQuantity": 130,
+      "id": "116b"
+    },
+    {
+      "id": "3ea5",
+      "name": "Frigider ",
+      "details": "Side by side",
+      "brandId": "2",
+      "purchasePrice": 12000,
+      "salePrice": 1500,
+      "availableQuantity": 1
+    },
+    {
+      "id": "ebc4",
+      "name": "Tastatura",
+      "details": "--------------",
+      "brandId": "2",
+      "purchasePrice": 200,
+      "salePrice": 300,
+      "availableQuantity": 50
+    },
+    {
+      "id": "f8a6",
+      "name": "Lenovo Yoga PRO 9i",
+      "details": "Laptop ",
+      "brandId": "1eba",
+      "purchasePrice": 9600,
+      "salePrice": 1150,
+      "availableQuantity": 5
+    },
+    {
+      "id": "c541",
+      "name": "TV samsun 32\"",
+      "details": "ecran",
+      "brandId": "2",
+      "purchasePrice": 100000,
+      "salePrice": 10000000,
+      "availableQuantity": 50
+    }
+  ],
+  "orders": [
+    {
+      "orderNo": "12",
+      "productId": "ed4a",
+      "quantity": "3",
+      "salePrice": 12000,
+      "discount": "12",
+      "totalAmount": 35988,
+      "id": "f6e8"
+    },
+    {
+      "id": "77a7",
+      "orderNo": "12",
+      "productId": "3ea5",
+      "quantity": "1",
+      "salePrice": 1500,
+      "discount": "10",
+      "totalAmount": 1490
+    }
+  ]
+}
