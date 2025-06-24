@@ -1,4 +1,26 @@
 {
+  "categories": [
+    {
+      "id": "1",
+      "name": "Electronics",
+      "description": "Electronic devices and gadgets"
+    },
+    {
+      "id": "2",
+      "name": "Home Appliances",
+      "description": "Household appliances"
+    },
+    {
+      "id": "3",
+      "name": "Computers",
+      "description": "Laptops, desktops and computer accessories"
+    },
+    {
+      "id": "4",
+      "name": "Mobile Devices",
+      "description": "Smartphones and tablets"
+    }
+  ],
   "brands": [
     {
       "id": "1",
@@ -42,6 +64,7 @@
       "name": "LG TV 32inch",
       "details": "detail of LG TV 32inch",
       "brandId": "2",
+      "categoryId": "1",
       "purchasePrice": 1000,
       "salePrice": "12000",
       "availableQuantity": 323,
@@ -52,23 +75,26 @@
       "name": "LG TV 42inch",
       "details": "detail",
       "brandId": "1",
+      "categoryId": "1",
       "purchasePrice": "20000",
       "salePrice": "22000",
       "availableQuantity": 50
     },
     {
       "id": "ed4a",
-      "name": "LG 32inch  ultra hd tv",
+      "name": "LG 32inch ultra hd tv",
       "details": "",
       "brandId": "1",
+      "categoryId": "1",
       "purchasePrice": 10000,
       "salePrice": 12000,
       "availableQuantity": 47
     },
     {
-      "name": "Samsun Mobile 4G",
-      "details": "detail of Samsun Mobile 4G",
+      "name": "Samsung Mobile 4G",
+      "details": "detail of Samsung Mobile 4G",
       "brandId": "2",
+      "categoryId": "4",
       "purchasePrice": 8000,
       "salePrice": 9000,
       "availableQuantity": 130,
@@ -76,9 +102,10 @@
     },
     {
       "id": "3ea5",
-      "name": "Frigider ",
+      "name": "Frigider",
       "details": "Side by side",
       "brandId": "2",
+      "categoryId": "2",
       "purchasePrice": 12000,
       "salePrice": 1500,
       "availableQuantity": 1
@@ -88,6 +115,7 @@
       "name": "Tastatura",
       "details": "--------------",
       "brandId": "2",
+      "categoryId": "3",
       "purchasePrice": 200,
       "salePrice": 300,
       "availableQuantity": 50
@@ -95,17 +123,19 @@
     {
       "id": "f8a6",
       "name": "Lenovo Yoga PRO 9i",
-      "details": "Laptop ",
+      "details": "Laptop",
       "brandId": "1eba",
+      "categoryId": "3",
       "purchasePrice": 9600,
       "salePrice": 1150,
       "availableQuantity": 5
     },
     {
       "id": "c541",
-      "name": "TV samsun 32\"",
+      "name": "TV Samsung 32\"",
       "details": "ecran",
       "brandId": "2",
+      "categoryId": "1",
       "purchasePrice": 100000,
       "salePrice": 10000000,
       "availableQuantity": 50
@@ -119,6 +149,7 @@
       "salePrice": 12000,
       "discount": "12",
       "totalAmount": 35988,
+      "orderDate": "2024-01-15",
       "id": "f6e8"
     },
     {
@@ -128,7 +159,38 @@
       "quantity": "1",
       "salePrice": 1500,
       "discount": "10",
-      "totalAmount": 1490
+      "totalAmount": 1490,
+      "orderDate": "2024-01-15"
+    },
+    {
+      "id": "abc1",
+      "orderNo": "13",
+      "productId": "116b",
+      "quantity": "2",
+      "salePrice": 9000,
+      "discount": "5",
+      "totalAmount": 17100,
+      "orderDate": "2024-01-20"
+    },
+    {
+      "id": "def2",
+      "orderNo": "14",
+      "productId": "ebc4",
+      "quantity": "5",
+      "salePrice": 300,
+      "discount": "0",
+      "totalAmount": 1500,
+      "orderDate": "2024-01-25"
+    },
+    {
+      "id": "ghi3",
+      "orderNo": "15",
+      "productId": "1",
+      "quantity": "1",
+      "salePrice": 12000,
+      "discount": "8",
+      "totalAmount": 11040,
+      "orderDate": "2024-02-01"
     }
   ]
 }

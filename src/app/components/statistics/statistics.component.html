@@ -1,0 +1,199 @@
+<div class="statistics-container p-6 bg-gray-50 min-h-screen">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">Statistici Vânzări</h1>
+
+    <div *ngIf="loading" class="flex justify-center items-center h-64">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      {{ error }}
+    </div>
+
+    <div *ngIf="statistics && !loading" class="space-y-6">
+      <!-- Overview Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <mat-card class="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+          <mat-card-content class="p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-blue-100 text-sm font-medium">Total Produse Vândute</p>
+                <p class="text-3xl font-bold">{{ statistics.totalSales }}</p>
+              </div>
+              <mat-icon class="text-4xl text-blue-200">shopping_cart</mat-icon>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="bg-gradient-to-r from-green-500 to-green-600 text-white">
+          <mat-card-content class="p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-green-100 text-sm font-medium">Venituri Totale</p>
+                <p class="text-3xl font-bold">{{ formatCurrency(statistics.totalRevenue) }}</p>
+              </div>
+              <mat-icon class="text-4xl text-green-200">attach_money</mat-icon>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+          <mat-card-content class="p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-purple-100 text-sm font-medium">Produse Diferite</p>
+                <p class="text-3xl font-bold">{{ statistics.productsSold.length }}</p>
+              </div>
+              <mat-icon class="text-4xl text-purple-200">inventory</mat-icon>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+          <mat-card-content class="p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-orange-100 text-sm font-medium">Categorii Active</p>
+                <p class="text-3xl font-bold">{{ statistics.categorySales.length }}</p>
+              </div>
+              <mat-icon class="text-4xl text-orange-200">category</mat-icon>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Detailed Statistics -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Statistici Detaliate</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-tab-group class="mt-4">
+            <!-- Products Tab -->
+            <mat-tab label="Produse Vândute">
+              <div class="mt-4">
+                <h3 class="text-lg font-semibold mb-4">Top Produse după Cantitate Vândută</h3>
+                <div class="overflow-x-auto">
+                  <table mat-table [dataSource]="statistics.productsSold" class="w-full">
+                    <ng-container matColumnDef="productName">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Nume Produs</th>
+                      <td mat-cell *matCellDef="let product">{{ product.productName }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="categoryName">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Categorie</th>
+                      <td mat-cell *matCellDef="let product">
+                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                          {{ product.categoryName }}
+                        </span>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="brandName">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Brand</th>
+                      <td mat-cell *matCellDef="let product">{{ product.brandName }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="quantitySold">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Cantitate Vândută</th>
+                      <td mat-cell *matCellDef="let product">
+                        <span class="font-semibold text-green-600">{{ product.quantitySold }}</span>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="totalRevenue">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Venituri Totale</th>
+                      <td mat-cell *matCellDef="let product">
+                        <span class="font-semibold text-blue-600">{{ formatCurrency(product.totalRevenue) }}</span>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="productColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: productColumns;" class="hover:bg-gray-50"></tr>
+                  </table>
+                </div>
+              </div>
+            </mat-tab>
+
+            <!-- Categories Tab -->
+            <mat-tab label="Vânzări pe Categorii">
+              <div class="mt-4">
+                <h3 class="text-lg font-semibold mb-4">Performanța Categoriilor</h3>
+                <div class="overflow-x-auto">
+                  <table mat-table [dataSource]="statistics.categorySales" class="w-full">
+                    <ng-container matColumnDef="categoryName">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Categorie</th>
+                      <td mat-cell *matCellDef="let category">
+                        <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full font-medium">
+                          {{ category.categoryName }}
+                        </span>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="productCount">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Nr. Produse</th>
+                      <td mat-cell *matCellDef="let category">{{ category.productCount }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="quantitySold">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Cantitate Vândută</th>
+                      <td mat-cell *matCellDef="let category">
+                        <span class="font-semibold text-green-600">{{ category.quantitySold }}</span>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="totalRevenue">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Venituri Totale</th>
+                      <td mat-cell *matCellDef="let category">
+                        <span class="font-semibold text-blue-600">{{ formatCurrency(category.totalRevenue) }}</span>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="categoryColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: categoryColumns;" class="hover:bg-gray-50"></tr>
+                  </table>
+                </div>
+              </div>
+            </mat-tab>
+
+            <!-- Monthly Sales Tab -->
+            <mat-tab label="Vânzări Lunare">
+              <div class="mt-4">
+                <h3 class="text-lg font-semibold mb-4">Evoluția Vânzărilor pe Luni</h3>
+                <div class="overflow-x-auto">
+                  <table mat-table [dataSource]="statistics.monthlySales" class="w-full">
+                    <ng-container matColumnDef="period">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Perioada</th>
+                      <td mat-cell *matCellDef="let monthly">
+                        <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full font-medium">
+                          {{ getMonthYear(monthly.month, monthly.year) }}
+                        </span>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="totalSales">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Produse Vândute</th>
+                      <td mat-cell *matCellDef="let monthly">
+                        <span class="font-semibold text-green-600">{{ monthly.totalSales }}</span>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="totalRevenue">
+                      <th mat-header-cell *matHeaderCellDef class="font-semibold">Venituri</th>
+                      <td mat-cell *matCellDef="let monthly">
+                        <span class="font-semibold text-blue-600">{{ formatCurrency(monthly.totalRevenue) }}</span>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="monthlyColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: monthlyColumns;" class="hover:bg-gray-50"></tr>
+                  </table>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
